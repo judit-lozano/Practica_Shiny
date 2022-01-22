@@ -18,12 +18,13 @@ funcion_base <- function(num, chosen, strategy){
   # resultado
   if(select==prize)
   {
-    outcome<-'Winner!'
+    outcome<-'Ganas el premio!'
   }else{
-    outcome<-'Losser!'
+    outcome<-'Pierdes!'
   }
   
-  return(cat(paste('Puerta elegida al principio: ',guess,
+  return(cat(paste('Numero de puertas para jugar: ',num,
+                   '\nPuerta elegida al principio: ',guess,
                    '\nEstrategia escogida: ',strategy,
                    '\nPuerta elegida al final: ',select,
                    '\nPuerta con Premio: ',prize,
