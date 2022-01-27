@@ -36,18 +36,12 @@ shinyServer(#una funcion dentro de shinyServer
                        '\n',outcome,'\n\n',sep='')))
     }
     
-    #Test
-    #Si yo elijo:
-    
-    num <- 3#(input$sample_size) #numero de puertas
-    chosen <- 1 #puerta elegida
-    strategy <-'swithch'#(input$vary) #'switch' or 'stay'
-    
-    funcion_base(num, chosen, strategy)   
+
+ 
     
     output$summary <- renderPrint({ #genero el sumario descriptivo que se actualiza según se actualice el set de datos mybox$df
       #y se traslada al UI a traves del ID "summary"
-      funcion_base(num, chosen, strategy)
+      funcion_base(input$sample_size, input$choice, input$vary)
     })
  
   }

@@ -1,7 +1,7 @@
 library(shiny)
 library(ggplot2)
 
-variables = list("switch"="switch", "stay"="stay")
+variables = list("Cambiar la puerta"="switch", "Mantener la puerta"="stay")
 
 #estructura jerárquica que empieza con shinyUI
 shinyUI(fluidPage(
@@ -9,7 +9,9 @@ shinyUI(fluidPage(
   sidebarLayout(#hijo de fuidPage
     sidebarPanel(#hijo de sidebarLayout
       numericInput('sample_size', 'Numero de puertas',
-                   3, min = 1, max = 10000),#hijo de sidebarPanel, aquí se le pide al usuario un input numérico, en este caso que elija el tamaño de la muestra.
+                   3, min = 3, max = 10000),#hijo de sidebarPanel, aquí se le pide al usuario un input numérico, en este caso que elija el tamaño de la muestra.
+      numericInput('choice', 'Elige una puerta para empezar',
+                   3, min = 1, max = 10000),
       selectInput("vary", #aquí se le pide al usuario un input de seleccionar, en este caso que elija el filtrado de cut para el que quiere ver el gráfico.
                   label="Estrategia",
                   choices=variables)#hijo de sidebarPanel
