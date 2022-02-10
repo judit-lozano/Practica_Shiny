@@ -2,9 +2,11 @@ library(dplyr)
 library(shiny)
 library(ggplot2)
 library(shinyjs)
+library(shinythemes)
+library(bslib)
 
 #estructura jerárquica que empieza con shinyUI
-ui <- fluidPage(
+ui <- fluidPage(theme = shinytheme("united"),
   useShinyjs(),
   titlePanel("Monty Hall Paradox"), 
   tabsetPanel(
