@@ -1,5 +1,6 @@
 library(dplyr)
 library(shiny)
+library(shinyWidgets)
 library(ggplot2)
 library(shinyjs)
 library(shinythemes)
@@ -37,8 +38,11 @@ ui <- fluidPage(theme = shinytheme("united"),
       column(width = 4,
              textOutput("monte_about"),
              sliderInput("n_iter", label = "Number of Trials", min = 1,
-                         max = 200, value = 25)),
-      column(width = 8, plotOutput("Monte_Carlo"))
+                         max = 200, value = 25),
+             actionButton("runButton", "Run")),
+      
+      column(width = 8, plotOutput("Monte_Carlo")),
+    
     ))
   )
 )
@@ -169,9 +173,12 @@ server <- function(input, output) {
     }
   })
   
-  
   # monte-carlo simulation in final tab
   output$Monte_Carlo <- renderPlot({
+    
+    input$runButton
+    
+    isolate({
     
     wins <- c(0, 0)  # no switch, switch
     for (i in c(0:input$n_iter)) {
@@ -191,9 +198,16 @@ server <- function(input, output) {
       }
     }
     
-    barplot(wins/sum(wins), names.arg = c("Stayed", "Switched"), ylim = c(0, 1), 
-            main = "Percentage of total wins", col = "sky blue")
-    
+      barplot(wins/sum(wins), 
+              names.arg = c("Stayed", "Switched"), 
+              ylim = c(0, 1), 
+              main = "Percentage of total wins", 
+              col = "skyblue",
+              legend = rownames(c("goat", "car")),
+              beside = TRUE
+              )
+      
+    }) 
   })
 }
 
