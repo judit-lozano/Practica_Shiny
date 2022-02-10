@@ -3,7 +3,6 @@ library(shiny)
 library(ggplot2)
 library(shinyjs)
 library(shinythemes)
-library(bslib)
 
 #estructura jerárquica que empieza con shinyUI
 ui <- fluidPage(theme = shinytheme("united"),
