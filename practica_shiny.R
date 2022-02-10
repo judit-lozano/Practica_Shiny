@@ -4,9 +4,13 @@ library(shinyWidgets)
 library(ggplot2)
 library(shinyjs)
 library(shinythemes)
+library(bslib)
+thematic::thematic_shiny(font = "auto")
+
 
 #estructura jerárquica que empieza con shinyUI
-ui <- fluidPage(theme = shinytheme("united"),
+ui <- fluidPage(
+  theme = bs_theme(),
   useShinyjs(),
   titlePanel("Monty Hall Paradox"), 
   tabsetPanel(
@@ -48,6 +52,7 @@ ui <- fluidPage(theme = shinytheme("united"),
 )
 
 server <- function(input, output) {
+  bs_themer()
   
   mybox <- reactiveValues()
   mybox$df <- data.frame()
