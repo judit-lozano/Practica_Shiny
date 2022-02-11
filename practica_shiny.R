@@ -2,18 +2,21 @@ library(dplyr)
 library(shiny)
 library(shinyWidgets)
 library(ggplot2)
-library(shinyjs)
 library(shinythemes)
-library(bslib)
-thematic::thematic_shiny(font = "auto")
 
 
 #estructura jerárquica que empieza con shinyUI
 ui <- fluidPage(
-  img(src='logo.png', align = "right", height = '85px', width = '95px'),
-  theme = bs_theme(),
-  useShinyjs(),
-  titlePanel("Monty Hall Paradox"), 
+  tags$head(tags$style('
+   body {
+      font-family: Consolas; # también se puede Arial, Helvetica, Consolas... 
+      font-size: 20px; 
+      font-style: regular; # O italic para que se vea cursivo, etc 
+   }'
+  )),
+  img(src='logo.png', align = "right", height = '150px', width = '150px'),
+  theme = shinytheme("united"),
+  titlePanel("Monty Hall Paradox"),
   tabsetPanel(
     tabPanel("Single Experiment", fluidRow(
       # Columna de 3 para los selects, y columna de 9 para los botones/dibujos
@@ -48,8 +51,8 @@ ui <- fluidPage(
              actionButton("generar", "Ejecutar")),
       column(width = 8, plotOutput("plot"))
     ))
-  )
-)
+))
+
 
 server <- function(input, output) {
   
