@@ -146,7 +146,7 @@ server <- function(input, output) {
         
         radioGroupButtons(
           inputId = 'Id_Paso2',
-          label = '¿Quieres cambiar de puerta?',
+          label = HTML(paste('<h6><b>Tu puerta escogida al inicio es la --', input$Id_Paso1, '</b></h6>')),
           choices= c(mybox$df$reveal),
           status = "primary")
       }
