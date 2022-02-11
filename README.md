@@ -1,16 +1,16 @@
-# Shiny practice - Monty Hall Paradox
+# Práctica de Shiny - Paradoja de Monty Hall
 
-### About the practice
+### Sobre la práctica
 
-This repository contains the Shiny practice from Data Visualization Techniques topic proposed by Alejandro Vidal, teacher at CUNEF University. 
+Este repositorio contiene la práctica Shiny de la asignatura de Técnicas de Visualización de Datos propuesta por Alejandro Vidal, profesor de la Universidad CUNEF.
 
-### What is the Monty Hall problem?
+### ¿Cuál es el problema de Monty Hall?
 
-The Monty Hall paradox is a famous puzzle from an American game show. It goes like this: you are presented with 3 doors. Behind two are goats and behind the third is a car or a large prize. You are asked to select a door; if you select the door with the car, you win! After selecting, the host then opens one of the remaining two doors, revealing a goat. The host then asks if you would like to switch doors or stay with your original choice. The debate is there. 
+La paradoja de Monty Hall es un famoso rompecabezas de un programa de juego americano. Funciona de la siguiente forma: hay dos puertas. Detrás de dos de ellas hay dos cabras y detrás del tercero hay un automóvil o un premio cuantioso. Se le pide que seleccione una puerta; si se selecciona la puerta con el coche, gana la partida. Después de seleccionar, el anfitrión abre una de las dos puertas restantes, revelando una cabra. Luego, el anfitrión pregunta al concursante si desea cambiar de puerta o quedarse con su elección original. El debate se encuentra justamente ahí.
 
 <img src="https://hollamhouse.files.wordpress.com/2016/08/monty-hall-1.jpg" width="500" />
 
-### Authors:
+### Autores:
 
 - Judit Lozano Gondolbeu (judit.lozano@cunef.edu)
 
@@ -18,9 +18,9 @@ The Monty Hall paradox is a famous puzzle from an American game show. It goes li
 
 - Alejandro Gómez Rivas (a.gomezrivas@cunef.edu)
 
-### Github Project Link:
+### Link del proyecto en el Github:
 
-- https://github.com/judit-lozano/Practica_Shiny --> TEMPORARY LINK UNTIL WE CHANGE THE REPOSITORY TITLE
+- https://github.com/judit-lozano/Practica_Shiny --> LINK TEMPORAL HASTA QUE CAMBIEMOS EL TÍTULO DEL TRABAJO
 
 <p align="center">
   <img src="https://masterfinanzas.cunef.edu/images/logo.png" width="100" />
