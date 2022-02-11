@@ -186,9 +186,9 @@ server <- function(input, output) {
   observeEvent(input$generar, {
     output$plot <- renderPlot({
       
-      win<-c(0,0) #contador de las veces que se gana
+      wins<-c(0,0) #contador de las veces que se gana
       
-      for (i in c(0:isolate({n_iter}))){
+      for (i in c(0:isolate({input$n_iter}))){
         
         prize <-floor(runif(1,1,isolate({input$doors+1})))
         doors <- c(1:isolate({input$doors}))
@@ -209,7 +209,7 @@ server <- function(input, output) {
       }
       
       barplot(wins/sum(wins), names.arg = c("Mantener", "Cambiar"), ylim = c(0, 1), 
-              main = "Porcentages Estrategia Ganadora", col = "sky blue")
+              main = "Porcentajes Estrategia Ganadora", col = "sky blue")
       
       
     })
