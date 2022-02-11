@@ -16,7 +16,7 @@ ui <- fluidPage(
   tabsetPanel(
     tabPanel("Single Experiment", fluidRow(
       # Columna de 3 para los selects, y columna de 9 para los botones/dibujos
-      column(width = 3,
+      column(width = 4,
              # conditional panels que cambian en el UI
              conditionalPanel( "input.select % 3 == 0",
                                numericInput('num', label="Elige el numero de puertas",value=3, min=3,max=500),
@@ -30,7 +30,7 @@ ui <- fluidPage(
                                  
              ), actionButton("select", "Continuar")
       ),
-      column(width = 9, 
+      column(width = 8, 
              br(),br(),
              uiOutput('my_buttons'),
              br(),
@@ -40,19 +40,17 @@ ui <- fluidPage(
     )),
     tabPanel("Multiple Experiment", fluidRow(
       column(width = 4,
-             textOutput("monte_about"),
-             sliderInput("n_iter", label = "Number of Trials", min = 1,
+             br(),
+             numericInput('doors', label="Numero de puertas",value=3, min=3,max=500),
+             sliderInput("n_iter", label = "Numero de simulaciones", min = 1,
                          max = 200, value = 25),
-             actionButton("runButton", "Run")),
-      
-      column(width = 8, plotOutput("Monte_Carlo")),
-    
+             actionButton("generar", "Ejecutar")),
+      column(width = 8, plotOutput("plot"))
     ))
   )
 )
 
 server <- function(input, output) {
-  bs_themer()
   
   mybox <- reactiveValues()
   mybox$df <- data.frame()
@@ -95,6 +93,8 @@ server <- function(input, output) {
             '\nResultado: ',mybox$resultado,'\n\n',sep='')
     }
   })
+  
+  
   
   output$last <- renderUI({
     if (input$select %% 3 == 2) {
@@ -171,49 +171,48 @@ server <- function(input, output) {
     # resultado
     if(mybox$final==mybox$df$prize[1]){
       HTML(paste('<h6><b>!Ganas el Premio!</b></h6>'))
-      #mybox$resultado <- "¡Ganas el Coche!"
     }else{
       HTML(paste('<h6><b>...Pierdes...</b></h6>'))
-      #mybox$resultado <- "Pierdes"
     }
   })
   
-  # monte-carlo simulation in final tab
-  output$Monte_Carlo <- renderPlot({
-    
-    input$runButton
-    
-    isolate({
-    
-    wins <- c(0, 0)  # no switch, switch
-    for (i in c(0:input$n_iter)) {
-      prizes <- sample(c("car", "goat", "goat"), size = 3)
-      door_num <- c(1:3)
-      doors <- cbind(door_num, prizes)
+  
+  # msimulation in final tab
+  
+  observeEvent(input$generar, {
+    output$plot <- renderPlot({
       
-      selected <- sample(c(1:3), 1)
-      switch <- sample(c(TRUE, FALSE), 1)
-      show <- min(which(doors[,1] != selected & doors[,2] != "car"))
-      if (switch) {
-        selected <- doors[,1] != selected & doors[,1] != show
-      }
-      if (doors[selected,2] == "car") {
-        switch <- switch + 1
-        wins[switch] <- wins[[switch]] + 1
-      }
-    }
-    
-      barplot(wins/sum(wins), 
-              names.arg = c("Stayed", "Switched"), 
-              ylim = c(0, 1), 
-              main = "Percentage of total wins", 
-              col = "skyblue",
-              legend = rownames(c("goat", "car")),
-              beside = TRUE
-              )
+      win<-c(0,0) #contador de las veces que se gana
       
-    }) 
+      for (i in c(0:isolate({n_iter}))){
+        
+        prize <-floor(runif(1,1,isolate({input$doors+1})))
+        doors <- c(1:isolate({input$doors}))
+        selected <- sample(doors,1,replace=TRUE)
+        strategy <- sample(c(TRUE,FALSE), 1)
+        mi_df <- data.frame(doors, prize)
+        df <- mi_df %>%
+          mutate(prizes=if_else(prize==doors, "Coche", "Cabra"))
+        
+        show <- min(which(df[,1] != selected & df[,3] != "Coche"))
+        if (strategy) {
+          selected <- df[,1] != selected & df[,1] != show
+        }
+        if (df[selected,3][1] == "Coche") {
+          strategy <- strategy + 1
+          wins[strategy] <- wins[[strategy]] + 1
+        }
+      }
+      
+      barplot(wins/sum(wins), names.arg = c("Mantener", "Cambiar"), ylim = c(0, 1), 
+              main = "Porcentages Estrategia Ganadora", col = "sky blue")
+      
+      
+    })
   })
+  
+  
+  
 }
 
 # Lanza la aplicacion
