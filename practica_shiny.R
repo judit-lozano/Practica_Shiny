@@ -10,6 +10,7 @@ thematic::thematic_shiny(font = "auto")
 
 #estructura jerárquica que empieza con shinyUI
 ui <- fluidPage(
+  img(src='logo.png', align = "right", height = '85px', width = '95px'),
   theme = bs_theme(),
   useShinyjs(),
   titlePanel("Monty Hall Paradox"), 
