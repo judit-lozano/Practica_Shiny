@@ -2,41 +2,44 @@ library(dplyr)
 library(shiny)
 library(shinyWidgets)
 library(ggplot2)
+library(shinyjs)
 library(shinythemes)
+library(bslib)
+thematic::thematic_shiny(font = "auto")
 
 
 #estructura jerárquica que empieza con shinyUI
 ui <- fluidPage(
-  tags$head(tags$style('
-   body {
-      font-family: Consolas; # también se puede Arial, Helvetica, Consolas... 
-      font-size: 20px; 
-      font-style: regular; # O italic para que se vea cursivo, etc 
-   }'
-  )),
-  img(src='logo.png', align = "right", height = '150px', width = '150px'),
-  theme = shinytheme("united"),
+  theme = bs_theme(),
+  useShinyjs(),
   titlePanel("Monty Hall Paradox"),
+  img(src='logo.png', align = "right", height = '150px', width = '150px'),
   tabsetPanel(
     tabPanel("Single Experiment", fluidRow(
       # Columna de 3 para los selects, y columna de 9 para los botones/dibujos
       column(width = 4,
              # conditional panels que cambian en el UI
              conditionalPanel( "input.select % 3 == 0",
-                               numericInput('num', label="Elige el numero de puertas",value=3, min=3,max=500),
-                               uiOutput('door_choice')
-             ), conditionalPanel( "input.select % 3 == 1", 
-                                  htmlOutput("current"),
-                                  selectInput("strategy", label = "¿Quieres cambiar de puerta?",
-                                              choices = list("Mantengo la puerta" = "stay", "Cambio la puerta" = "switch"))
-             ), conditionalPanel("input.select % 3 == 2",
-                                 htmlOutput("final")
-                                 
-             ), actionButton("select", "Continuar")
+                               br(),
+                               numericInput('num', label="Elige el numero de puertas",value=3, min=3,max=500)
+             ),  
+             conditionalPanel("input.select % 3 == 2",
+                              br(),
+                              htmlOutput("final"),
+                              uiOutput("image")
+                              
+             )
       ),
-      column(width = 8, 
-             br(),br(),
+      column(width = 8,
+             br(),
              uiOutput('my_buttons'),
+             conditionalPanel( "input.select % 3 == 0",
+                               htmlOutput("elige_p")),
+             conditionalPanel( "input.select % 3 == 1",
+                               selectInput("strategy", label = 'Elige tu estrategia de juego, ¿quieres cambiar?',
+                                           choices = list("Mantengo la puerta" = "mantener", "Cambio la puerta" = "cambiar"))),
+             
+             actionButton("select", "Continuar"),
              br(),
              verbatimTextOutput("summary"),
              br(),
@@ -51,8 +54,8 @@ ui <- fluidPage(
              actionButton("generar", "Ejecutar")),
       column(width = 8, plotOutput("plot"))
     ))
-))
-
+  )
+)
 
 server <- function(input, output) {
   
@@ -68,18 +71,9 @@ server <- function(input, output) {
              step_1= paste0('Puerta ',door_num))
   })
   
-  output$door_choice <- renderUI({
-    selectInput("selectDoor", label = "Elige una puerta", 
-                choices = c(mybox$df$door_num))
-    
-  })
   
-  observeEvent(input$selectDoor, {
-    mybox$selectDoor <- input$selectDoor
-  })
-
-  observeEvent(input$mybox$df$reveal, {
-    mybox$selectDoor <- input$mybox$df$reveal
+  observeEvent(input$Id_Paso1, {
+    mybox$selectDoor <- input$Id_Paso1
   })
   
   observeEvent(input$strategy, {
@@ -102,6 +96,11 @@ server <- function(input, output) {
     }
   })
   
+  observeEvent(input$select, {
+    if (input$select %% 3 == 2) {
+      removeUI(selector='#select', immediate=TRUE)}
+  }, autoDestroy=TRUE)
+  
   
   
   output$last <- renderUI({
@@ -113,10 +112,12 @@ server <- function(input, output) {
   
   output$my_buttons <-renderUI({
     if (input$select %% 3 == 0) {
-      actionGroupButtons(
-        inputIds = c(mybox$df$step_1),
-        labels = c(mybox$df$step_1),
-        status = "primary")
+      radioGroupButtons(
+        inputId = 'Id_Paso1',
+        label = 'Toca un botón para elegir una puerta',
+        choices= c(mybox$df$door_num),
+        status = "primary"
+      ) 
       
     } else if (input$select %% 3 == 1) {
       if(mybox$df$prize[1]!=mybox$selectDoor){
@@ -128,10 +129,12 @@ server <- function(input, output) {
         mask1 <- mybox$df$reveal!="Cabra"
         mybox$a <- c(mybox$df$reveal[mask1])
         
-        actionGroupButtons(
-          inputIds = c(mybox$df$reveal),
-          labels = c(mybox$df$reveal),
+        radioGroupButtons(
+          inputId = 'Id_Paso2',
+          label = HTML(paste('<h6><b>Tu puerta escogida al inicio es la --', input$Id_Paso1, '</b></h6>')),
+          choices= c(mybox$df$reveal),
           status = "primary")
+        
       }else{
         mybox$mi_vector <- c(sample(mybox$df$door_num[-which(c(mybox$df$door_num== mybox$df$prize[1]))],
                                     nrow(mybox$df)-2))
@@ -141,13 +144,15 @@ server <- function(input, output) {
         mask1 <- mybox$df$reveal!="Cabra"
         mybox$a <- c(mybox$df$reveal[mask1])
         
-        actionGroupButtons(
-          inputIds = c(mybox$df$reveal),
-          labels = c(mybox$df$reveal),
-          status = "primary") }
+        radioGroupButtons(
+          inputId = 'Id_Paso2',
+          label = '¿Quieres cambiar de puerta?',
+          choices= c(mybox$df$reveal),
+          status = "primary")
+      }
       
     } else if (input$select %% 3 == 2) {
-      if(mybox$strategy=='switch'){
+      if(mybox$strategy=='cambiar'){
         
         algo <- mybox$a!=mybox$selectDoor
         mybox$final <-mybox$a[algo]
@@ -162,17 +167,14 @@ server <- function(input, output) {
         mybox$resultado <- "Pierdes"
       }
       
-      actionGroupButtons(
-        inputIds = c(mybox$df$words),
-        labels = c(mybox$df$words),
+      radioGroupButtons(
+        inputId = 'Id_Final',
+        label = 'Puertas Descubiertas',
+        choices= c(mybox$df$words),
         status = "primary"
       ) 
     }  
     
-  })
-  
-  output$current <- renderText({
-    HTML(paste('<h6><b>Tu puerta escogida es la --', input$selectDoor, '</b></h6>'))
   })
   
   output$final <- renderText({
@@ -184,8 +186,25 @@ server <- function(input, output) {
     }
   })
   
+  output$image <- renderUI({
+    if(mybox$final==mybox$df$prize[1]){
+      img(src = "coche.png", align ="left")
+    }else{
+      img(src = "cabra.jpeg",align ="left")
+    }
+  })
   
-  # msimulation in final tab
+  
+  output$elige_p <- renderText({
+    # resultado
+    if (input$select %% 3 == 0) {
+      HTML(paste('<h6><b>Tu puerta escogida actualmente es la --', 
+                 input$Id_Paso1, '</b></h6>'))
+    }
+  })
+  
+  
+  # simulation in final tab
   
   observeEvent(input$generar, {
     output$plot <- renderPlot({
