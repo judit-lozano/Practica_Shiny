@@ -73,6 +73,10 @@ server <- function(input, output) {
   observeEvent(input$selectDoor, {
     mybox$selectDoor <- input$selectDoor
   })
+
+  observeEvent(input$mybox$df$reveal, {
+    mybox$selectDoor <- input$mybox$df$reveal
+  })
   
   observeEvent(input$strategy, {
     mybox$strategy <- input$strategy
