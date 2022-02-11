@@ -2,7 +2,7 @@
 
 ### Sobre la práctica
 
-Este repositorio contiene la práctica Shiny de la asignatura de Técnicas de Visualización de Datos propuesta por Alejandro Vidal, profesor de la Universidad CUNEF.
+Este repositorio contiene una práctica de Shiny para la asignatura de Técnicas de Visualización, perteneciente al Master de Ciencia de Datos de Cunef.
 
 ### ¿Cuál es el problema de Monty Hall?
 
@@ -20,7 +20,7 @@ La paradoja de Monty Hall es un famoso rompecabezas de un programa de juego amer
 
 ### Link del proyecto en el Github:
 
-- https://github.com/judit-lozano/Practica_Shiny --> LINK TEMPORAL HASTA QUE CAMBIEMOS EL TÍTULO DEL TRABAJO
+- https://github.com/judit-lozano/Practica_Shiny
 
 <p align="center">
   <img src="https://masterfinanzas.cunef.edu/images/logo.png" width="100" />
